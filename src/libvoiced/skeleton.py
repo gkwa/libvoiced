@@ -22,9 +22,12 @@ References:
 
 import argparse
 import logging
+import pathlib
 import sys
 
-from libvoiced import __version__
+from clinepunk import clinepunk
+
+from libvoiced import __version__, putup
 
 __author__ = "Taylor Monacelli"
 __copyright__ = "Taylor Monacelli"
@@ -72,13 +75,20 @@ def parse_args(args):
     Returns:
       :obj:`argparse.Namespace`: command line parameters namespace
     """
-    parser = argparse.ArgumentParser(description="Just a Fibonacci demonstration")
+    parser = argparse.ArgumentParser(
+        description="Create a new project using random words"
+    )
     parser.add_argument(
         "--version",
         action="version",
         version="libvoiced {ver}".format(ver=__version__),
     )
-    parser.add_argument(dest="n", help="n-th Fibonacci number", type=int, metavar="INT")
+    parser.add_argument(
+        "basepath",
+        nargs="?",
+        default=".",
+        help="base directory for where to put new package",
+    )
     parser.add_argument(
         "-v",
         "--verbose",
@@ -122,8 +132,18 @@ def main(args):
     """
     args = parse_args(args)
     setup_logging(args.loglevel)
-    _logger.debug("Starting crazy calculations...")
-    print("The {}-th Fibonacci number is {}".format(args.n, fib(args.n)))
+
+    words = clinepunk.get_words(count=2)
+    name = "".join(words)
+    project_path = pathlib.Path(args.basepath) / name
+    while project_path.exists():
+        words = clinepunk.get_words(count=2)
+        name = "".join(words)
+        project_path = pathlib.Path(args.basepath) / name
+
+    _logger.info(f"creating new project in {project_path.resolve()}")
+    putup.putup(project_path.resolve())
+    _logger.info(project_path.resolve())
     _logger.info("Script ends here")
 
 
@@ -144,6 +164,6 @@ if __name__ == "__main__":
     # After installing your project with pip, users can also run your Python
     # modules as scripts via the ``-m`` flag, as defined in PEP 338::
     #
-    #     python -m libvoiced.skeleton 42
+    #     python -m libvoiced.skeleton
     #
     run()
