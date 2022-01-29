@@ -24,8 +24,10 @@ import argparse
 import logging
 import pathlib
 import sys
+from email.mime import base
 
 from clinepunk import clinepunk
+from simple_term_menu import TerminalMenu
 
 from libvoiced import __version__, putup
 
@@ -69,6 +71,12 @@ def parse_args(args):
         const=logging.INFO,
     )
     parser.add_argument(
+        "-nm",
+        "--no-menu",
+        action="store_true",
+        help="just create one project without allowing to choose the name",
+    )
+    parser.add_argument(
         "-vv",
         "--very-verbose",
         dest="loglevel",
@@ -91,30 +99,53 @@ def setup_logging(loglevel):
     )
 
 
+def get_unused_path(root):
+    def doit():
+        words = clinepunk.get_words(count=2)
+        name = "".join(words)
+        path = pathlib.Path(root) / name
+        return path
+
+    path = doit()
+    while path.exists():
+        path = doit()
+
+    return path
+
+
+def run_putup(path):
+    _logger.info(f"creating new project in {path.resolve()}")
+    putup.putup(path.resolve())
+    _logger.info(path.resolve())
+    print(path.resolve())
+
+
+def with_menu(basepath) -> pathlib.Path:
+    paths = [get_unused_path(basepath) for _ in range(20)]
+    options = [str(path) for path in paths]
+    terminal_menu = TerminalMenu(options)
+    menu_entry_index = terminal_menu.show()
+    if not menu_entry_index:
+        return None
+    path = pathlib.Path(options[menu_entry_index])
+    return path
+
+
+def without_menu(basepath):
+    return get_unused_path(basepath)
+
+
 def main(args):
-    """Wrapper allowing :func:`fib` to be called with string arguments in a CLI fashion
-
-    Instead of returning the value from :func:`fib`, it prints the result to the
-    ``stdout`` in a nicely formatted message.
-
-    Args:
-      args (List[str]): command line parameters as list of strings
-          (for example  ``["--verbose", "42"]``).
-    """
     args = parse_args(args)
     setup_logging(args.loglevel)
 
-    words = clinepunk.get_words(count=2)
-    name = "".join(words)
-    project_path = pathlib.Path(args.basepath) / name
-    while project_path.exists():
-        words = clinepunk.get_words(count=2)
-        name = "".join(words)
-        project_path = pathlib.Path(args.basepath) / name
+    basepath = args.basepath
+    path = without_menu(basepath) if args.no_menu else with_menu(basepath)
 
-    _logger.info(f"creating new project in {project_path.resolve()}")
-    putup.putup(project_path.resolve())
-    _logger.info(project_path.resolve())
+    if path:
+        _logger.info(f"creating new project in {path.resolve()}")
+        run_putup(path)
+
     _logger.info("Script ends here")
 
 
