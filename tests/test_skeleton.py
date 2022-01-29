@@ -1,19 +1,8 @@
-import pytest
-
-from libvoiced.skeleton import fib, main
+from libvoiced.skeleton import main
 
 __author__ = "Taylor Monacelli"
 __copyright__ = "Taylor Monacelli"
 __license__ = "MPL-2.0"
-
-
-def test_fib():
-    """API Tests"""
-    assert fib(1) == 1
-    assert fib(2) == 1
-    assert fib(7) == 13
-    with pytest.raises(AssertionError):
-        fib(-10)
 
 
 def test_main(capsys):
