@@ -10,4 +10,4 @@ __license__ = "MPL-2.0"
 
 def test_main():
     tmpdir = pathlib.Path(tempfile.gettempdir())
-    main([tmpdir, "--no-menu"])
+    main([str(tmpdir), "--no-menu"])
