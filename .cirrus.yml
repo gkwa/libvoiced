@@ -84,7 +84,6 @@ linux_mac_task:
         folder: "$HOME/Library/Caches/Homebrew"
       install_script:
         - brew install python
-        - brew cleanup
   <<: *REGULAR_TASK_TEMPLATE
 
 
