@@ -171,6 +171,7 @@ coverage_task:
     - pre-commit run --all-files
   <<: *REGULAR_TASK_TEMPLATE
   coverage_script:
+    - coveralls
   pre_commit_cache: &pre-commit-cache
     folder: $PRE_COMMIT_HOME
     fingerprint_script:

@@ -5,6 +5,7 @@ import subprocess
 def putup(project_path):
     cmd = [
         "putup",
+        "--force",
         "--pre-commit",
         "--venv",
         ".venv",
@@ -26,7 +27,4 @@ def putup(project_path):
         outs, errs = proc.communicate()
         logging.warning(errs.decode())
 
-    if errs:
-        logging.warning(f"failed to run {' '.join(cmd)}, error: {errs.decode()}")
-    else:
-        logging.debug(f"ran ok: {' '.join(cmd)}")
+    logging.debug(errs.decode())

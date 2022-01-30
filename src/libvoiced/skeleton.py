@@ -22,14 +22,14 @@ References:
 
 import argparse
 import logging
+import os
 import pathlib
 import sys
-from email.mime import base
 
 from clinepunk import clinepunk
 from simple_term_menu import TerminalMenu
 
-from libvoiced import __version__, putup
+from libvoiced import __version__, git, putup
 
 __author__ = "Taylor Monacelli"
 __copyright__ = "Taylor Monacelli"
@@ -93,9 +93,13 @@ def setup_logging(loglevel):
     Args:
       loglevel (int): minimum loglevel for emitting messages
     """
-    logformat = "[%(asctime)s] %(levelname)s:%(name)s:%(message)s"
+    # logformat = "[%(asctime)s] %(levelname)s:%(name)s:%(message)s"
+    format_stream = "{%(filename)s:%(lineno)d} %(levelname)s - %(message)s"  # console
     logging.basicConfig(
-        level=loglevel, stream=sys.stdout, format=logformat, datefmt="%Y-%m-%d %H:%M:%S"
+        level=loglevel,
+        stream=sys.stdout,
+        format=format_stream,
+        datefmt="%Y-%m-%d %H:%M:%S",
     )
 
 
@@ -115,23 +119,29 @@ def get_unused_path(root):
 
 def run_putup(path):
     _logger.info(f"creating new project in {path.resolve()}")
-    putup.putup(path.resolve())
-    _logger.info(path.resolve())
-    print(path.resolve())
+    putup.putup(path.cwd())
+    git.git_init(path.cwd())
+    _logger.debug(f"{os.getcwd()=}")
+    os.chdir(path.cwd())
+    _logger.debug(f"{os.getcwd()=}")
+    git.git_add(path.cwd())
+    _logger.info(path.cwd())
+    print(path.cwd())
 
 
-def with_menu(basepath) -> pathlib.Path:
+def select_with_menu(basepath) -> pathlib.Path:
     paths = [get_unused_path(basepath) for _ in range(20)]
     options = [str(path) for path in paths]
     terminal_menu = TerminalMenu(options)
     menu_entry_index = terminal_menu.show()
-    if not menu_entry_index:
+    _logger.debug(f"{menu_entry_index=}")
+    if menu_entry_index is None:
         return None
     path = pathlib.Path(options[menu_entry_index])
     return path
 
 
-def without_menu(basepath):
+def select_without_menu(basepath):
     return get_unused_path(basepath)
 
 
@@ -140,7 +150,9 @@ def main(args):
     setup_logging(args.loglevel)
 
     basepath = args.basepath
-    path = without_menu(basepath) if args.no_menu else with_menu(basepath)
+    path = select_without_menu(basepath) if args.no_menu else select_with_menu(basepath)
+
+    _logger.debug(f"{path=}")
 
     if path:
         _logger.info(f"creating new project in {path.resolve()}")
