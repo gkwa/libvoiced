@@ -150,13 +150,19 @@ def main(args):
     setup_logging(args.loglevel)
 
     basepath = args.basepath
-    path = select_without_menu(basepath) if args.no_menu else select_with_menu(basepath)
+
+    if not args.no_menu:
+        path = select_with_menu(basepath)
+
+    if args.no_menu:
+        path = select_without_menu(basepath)
 
     _logger.debug(f"path={path}")
 
     if path:
         _logger.info(f"creating new project in {path.resolve()}")
         run_putup(path)
+        print(path)
 
     _logger.info("Script ends here")
 
