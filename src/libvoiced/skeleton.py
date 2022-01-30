@@ -133,7 +133,7 @@ def select_with_menu(basepath) -> pathlib.Path:
     options = [str(path) for path in paths]
     terminal_menu = TerminalMenu(options)
     menu_entry_index = terminal_menu.show()
-    _logger.debug(f"{menu_entry_index}={menu_entry_index}")
+    _logger.debug(f"menu_entry_index={menu_entry_index}")
     if menu_entry_index is None:
         return None
     path = pathlib.Path(options[menu_entry_index])
@@ -151,7 +151,7 @@ def main(args):
     basepath = args.basepath
     path = select_without_menu(basepath) if args.no_menu else select_with_menu(basepath)
 
-    _logger.debug(f"{path=}")
+    _logger.debug(f"path={path}")
 
     if path:
         _logger.info(f"creating new project in {path.resolve()}")
