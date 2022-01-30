@@ -29,7 +29,6 @@ import sys
 import tempfile
 
 from clinepunk import clinepunk
-from simple_term_menu import TerminalMenu
 
 from libvoiced import __version__, putup
 
@@ -129,6 +128,8 @@ def run_putup(path):
 
 
 def select_with_menu(basepath) -> pathlib.Path:
+    from simple_term_menu import TerminalMenu
+
     paths = [get_unused_path(basepath) for _ in range(20)]
     options = [str(path) for path in paths]
     terminal_menu = TerminalMenu(options)
