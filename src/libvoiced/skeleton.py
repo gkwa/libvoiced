@@ -133,7 +133,7 @@ def select_with_menu(basepath) -> pathlib.Path:
     options = [str(path) for path in paths]
     terminal_menu = TerminalMenu(options)
     menu_entry_index = terminal_menu.show()
-    _logger.debug(f"{menu_entry_index=}")
+    _logger.debug(f"{menu_entry_index}={menu_entry_index}")
     if menu_entry_index is None:
         return None
     path = pathlib.Path(options[menu_entry_index])
