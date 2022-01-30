@@ -155,7 +155,7 @@ coverage_task:
   clone_script: *clone
   container: {image: "python:3.6-buster"}
   env:
-    COVERAGE: yes
+    COVERAGE: no
     PRE_COMMIT_HOME: ${HOME}/.cache/pre-commit
   depends_on:
     - test (Linux - 3.6)
