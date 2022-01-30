@@ -1,3 +1,6 @@
+import pathlib
+import tempfile
+
 from libvoiced.skeleton import main
 
 __author__ = "Taylor Monacelli"
@@ -6,4 +9,5 @@ __license__ = "MPL-2.0"
 
 
 def test_main():
-    main(["/tmp", "--no-menu"])
+    tmpdir = pathlib.Path(tempfile.gettempdir())
+    main([tmpdir, "--no-menu"])
