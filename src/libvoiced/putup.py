@@ -5,7 +5,6 @@ import subprocess
 def putup(project_path):
     cmd = [
         "putup",
-        "--force",
         "--pre-commit",
         "--venv",
         ".venv",

@@ -24,12 +24,14 @@ import argparse
 import logging
 import os
 import pathlib
+import shutil
 import sys
+import tempfile
 
 from clinepunk import clinepunk
 from simple_term_menu import TerminalMenu
 
-from libvoiced import __version__, git, putup
+from libvoiced import __version__, putup
 
 __author__ = "Taylor Monacelli"
 __copyright__ = "Taylor Monacelli"
@@ -118,15 +120,12 @@ def get_unused_path(root):
 
 
 def run_putup(path):
-    _logger.info(f"creating new project in {path.resolve()}")
-    putup.putup(path.cwd())
-    git.git_init(path.cwd())
-    _logger.debug(f"{os.getcwd()=}")
-    os.chdir(path.cwd())
-    _logger.debug(f"{os.getcwd()=}")
-    git.git_add(path.cwd())
-    _logger.info(path.cwd())
-    print(path.cwd())
+    tmpdir = pathlib.Path(tempfile.gettempdir()) / path.name
+    _logger.info(f"creating new project in {tmpdir}")
+    putup.putup(tmpdir)
+    t1 = pathlib.Path(os.getcwd()) / path.name
+    if not t1.exists():
+        shutil.move(tmpdir, path)
 
 
 def select_with_menu(basepath) -> pathlib.Path:
