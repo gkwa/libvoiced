@@ -6,6 +6,8 @@ def putup(project_path):
     cmd = [
         "putup",
         "--pre-commit",
+        "--url",
+        f"https://github.com/TaylorMonacelli/{project_path.name}.git",
         "--venv",
         ".venv",
         f"{project_path.resolve()}",
