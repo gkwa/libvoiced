@@ -106,7 +106,7 @@ def setup_logging(loglevel):
 
 def get_unused_path(root):
     def doit():
-        words = clinepunk.get_words(count=2)
+        words = clinepunk.sample(count=2)
         name = "".join(words)
         path = pathlib.Path(root) / name
         return path
