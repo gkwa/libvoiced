@@ -123,7 +123,10 @@ def run_putup(path):
     putup.putup(path)
     t1 = pathlib.Path(os.getcwd()) / path.name
     if t1.exists():
-        msg = f"skipping moving {path} to {path} beceause {t1} exists already"
+        msg = (
+            f"skipping moving {path.resolve()} to {path.resolve()} "
+            f"beceause {t1.resolve()} exists already"
+        )
         logging.warning(msg)
 
 
