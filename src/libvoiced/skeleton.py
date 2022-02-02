@@ -123,6 +123,10 @@ def run_putup(path):
     _logger.info(f"creating new project in {tmpdir}")
     putup.putup(tmpdir)
     t1 = pathlib.Path(os.getcwd()) / path.name
+    if t1.exists():
+        msg = f"skipping moving {tmpdir} to {path} beceause {t1} exists already"
+        logging.warning(msg)
+
     if not t1.exists():
         msg = f"moving {tmpdir} to {path}"
         logging.debug(msg)
