@@ -128,7 +128,7 @@ def run_putup(path):
         logging.warning(msg)
 
     if not t1.exists():
-        msg = f"moving {tmpdir} to {path}"
+        msg = f"moving {tmpdir.resolve()} to {path.resolve()}"
         logging.debug(msg)
         shutil.move(tmpdir, path)
 
