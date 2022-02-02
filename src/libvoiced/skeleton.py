@@ -157,8 +157,7 @@ def main(args):
     if path:
         _logger.info(f"creating new project in {path.resolve()}")
         run_putup(path)
-        rc_path = direnv.create_envrc(path)
-        direnv.allow_direnv(rc_path)
+        direnv.setup(path)
         print(path)
 
     _logger.info("Script ends here")

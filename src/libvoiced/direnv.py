@@ -1,6 +1,8 @@
 import logging
 import pathlib
+import platform
 import subprocess
+import sys
 import textwrap
 
 
@@ -51,3 +53,13 @@ def allow_direnv(rc_path: pathlib.Path):
         logging.warning(f"failed to run {' '.join(cmd)}, error: {errs.decode()}")
     else:
         logging.debug(f"ran ok: {' '.join(cmd)}")
+
+
+def setup(folder: pathlib.Path):
+    if platform.system() == "Windows":
+        msg = "support for direnv on windows doesn't look good, skipping direnv setup"
+        sys.stderr.write(msg)
+        logging.debug(msg)
+        return
+    rc_path = create_envrc(folder)
+    allow_direnv(rc_path)
