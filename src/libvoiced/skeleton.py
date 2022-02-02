@@ -124,6 +124,8 @@ def run_putup(path):
     putup.putup(tmpdir)
     t1 = pathlib.Path(os.getcwd()) / path.name
     if not t1.exists():
+        msg = f"moving {tmpdir} to {path}"
+        logging.debug(msg)
         shutil.move(tmpdir, path)
 
 

@@ -10,7 +10,9 @@ def putup(project_path):
         ".venv",
         f"{project_path.resolve()}",
     ]
-    logging.debug(cmd)
+    s = " ".join(cmd)
+
+    logging.debug(s)
 
     proc = subprocess.Popen(
         cmd,
