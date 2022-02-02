@@ -22,11 +22,8 @@ References:
 
 import argparse
 import logging
-import os
 import pathlib
-import shutil
 import sys
-import tempfile
 
 from clinepunk import clinepunk
 
@@ -121,41 +118,19 @@ def get_unused_path(root):
 def run_putup(path):
     _logger.info(f"creating new project in {path}")
     putup.putup(path)
-    t1 = pathlib.Path(os.getcwd()) / path.name
-    if t1.exists():
-        msg = (
-            f"skipping moving {path.resolve()} to {path.resolve()} "
-            f"beceause {t1.resolve()} exists already"
-        )
-        logging.warning(msg)
-
-
-def run_putup1(path):
-    tmpdir = pathlib.Path(tempfile.gettempdir()) / path.name
-    _logger.info(f"creating new project in {tmpdir}")
-    putup.putup(tmpdir)
-    t1 = pathlib.Path(os.getcwd()) / path.name
-    if t1.exists():
-        msg = f"skipping moving {tmpdir} to {path} beceause {t1} exists already"
-        logging.warning(msg)
-
-    if not t1.exists():
-        msg = f"moving {tmpdir.resolve()} to {path.resolve()}"
-        logging.debug(msg)
-        shutil.move(tmpdir, path)
 
 
 def select_with_menu(basepath) -> pathlib.Path:
     from simple_term_menu import TerminalMenu
 
     paths = [get_unused_path(basepath) for _ in range(20)]
-    options = [str(path) for path in paths]
+    options = [str(path.name) for path in paths]
     terminal_menu = TerminalMenu(options)
     menu_entry_index = terminal_menu.show()
     _logger.debug(f"menu_entry_index={menu_entry_index}")
     if menu_entry_index is None:
         return None
-    path = pathlib.Path(options[menu_entry_index])
+    path = basepath / options[menu_entry_index]
     return path
 
 
@@ -167,7 +142,7 @@ def main(args):
     args = parse_args(args)
     setup_logging(args.loglevel)
 
-    basepath = args.basepath
+    basepath = pathlib.Path(args.basepath)
     path = select_without_menu(basepath) if args.no_menu else select_with_menu(basepath)
 
     _logger.debug(f"path={path}")

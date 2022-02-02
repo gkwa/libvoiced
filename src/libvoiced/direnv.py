@@ -33,8 +33,8 @@ def create_envrc(folder: pathlib.Path):
 
 
 def allow_direnv(rc_path: pathlib.Path):
-    logging.debug(f"allowing direnv to load {rc_path}")
-    cmd = ["direnv", "allow", str(rc_path)]
+    logging.debug(f"allowing direnv to load {rc_path.resolve()}")
+    cmd = ["direnv", "allow", str(rc_path.resolve())]
     proc = subprocess.Popen(
         cmd,
         stdout=subprocess.PIPE,
