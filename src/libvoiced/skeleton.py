@@ -30,7 +30,7 @@ import tempfile
 
 from clinepunk import clinepunk
 
-from libvoiced import __version__, putup
+from libvoiced import __version__, direnv, putup
 
 __author__ = "Taylor Monacelli"
 __copyright__ = "Taylor Monacelli"
@@ -150,18 +150,15 @@ def main(args):
     setup_logging(args.loglevel)
 
     basepath = args.basepath
-
-    if not args.no_menu:
-        path = select_with_menu(basepath)
-
-    if args.no_menu:
-        path = select_without_menu(basepath)
+    path = select_without_menu(basepath) if args.no_menu else select_with_menu(basepath)
 
     _logger.debug(f"path={path}")
 
     if path:
         _logger.info(f"creating new project in {path.resolve()}")
         run_putup(path)
+        rc_path = direnv.create_envrc(path)
+        direnv.allow_direnv(rc_path)
         print(path)
 
     _logger.info("Script ends here")
