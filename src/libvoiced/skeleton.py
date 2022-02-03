@@ -82,6 +82,12 @@ def parse_args(args):
         action="store_const",
         const=logging.DEBUG,
     )
+    parser.add_argument(
+        "-n",
+        "--name",
+        dest="name",
+        help="instead of choosing a random name, use this name",
+    )
     return parser.parse_args(args)
 
 
@@ -143,7 +149,14 @@ def main(args):
     setup_logging(args.loglevel)
 
     basepath = pathlib.Path(args.basepath)
-    path = select_without_menu(basepath) if args.no_menu else select_with_menu(basepath)
+
+    if not args.name:
+        if args.no_menu:
+            path = select_without_menu(basepath)
+        else:
+            path = select_with_menu(basepath)
+    else:
+        path = basepath / args.name
 
     _logger.debug(f"path={path}")
 
