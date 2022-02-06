@@ -27,7 +27,7 @@ import sys
 
 from clinepunk import clinepunk
 
-from libvoiced import __version__, direnv, putup, venv
+from libvoiced import __version__, direnv, pip, putup, venv
 
 __author__ = "Taylor Monacelli"
 __copyright__ = "Taylor Monacelli"
@@ -166,6 +166,7 @@ def main(args):
         venv.create_virtualenv(path)
         direnv.setup(path)
         # git.do_all(path)
+        pip.pip_upgrade(path)
         print(path)
 
     _logger.info("Script ends here")

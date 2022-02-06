@@ -3,10 +3,13 @@ import pathlib
 import shutil
 import subprocess
 import tempfile
+import time
 
 
 def putup(project_path):
-    tmp_dir = pathlib.Path(tempfile.gettempdir()) / project_path.name
+    unique_id = int(time.time())
+    tmp_dir = pathlib.Path(tempfile.gettempdir()) / str(unique_id) / project_path.name
+    tmp_dir.parent.mkdir()
 
     cmd = [
         "putup",
