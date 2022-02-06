@@ -1,10 +1,11 @@
 import logging
 import os
+import pathlib
 import subprocess
 
 
-def create_virtualenv(project_path):
-    os.chdir(project_path)
+def do_work(path):
+    os.chdir(path)
     cmd = [
         "python3",
         "-mvenv",
@@ -28,3 +29,15 @@ def create_virtualenv(project_path):
         logging.warning(errs.decode())
 
     logging.debug(errs.decode())
+
+
+def create_virtualenv(project_path):
+    cwd = pathlib.Path.cwd()
+    try:
+        do_work(project_path)
+    except Exception as ex:
+        msg = "Something went wrong"
+        logging.exception(msg)
+        raise ex
+    finally:
+        os.chdir(cwd)
