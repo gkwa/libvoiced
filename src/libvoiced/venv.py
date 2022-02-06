@@ -1,17 +1,14 @@
 import logging
-import pathlib
-import shutil
+import os
 import subprocess
-import tempfile
 
 
-def putup(project_path):
-    tmp_dir = pathlib.Path(tempfile.gettempdir()) / project_path.name
-
+def create_virtualenv(project_path):
+    os.chdir(project_path)
     cmd = [
-        "putup",
-        "--pre-commit",
-        f"{tmp_dir.resolve()}",
+        "python3",
+        "-mvenv",
+        ".venv",
     ]
     s1 = " ".join(cmd)
     logging.debug(s1)
@@ -31,6 +28,3 @@ def putup(project_path):
         logging.warning(errs.decode())
 
     logging.debug(errs.decode())
-
-    logging.debug(f"moving {tmp_dir} to {project_path}")
-    shutil.move(tmp_dir, project_path)

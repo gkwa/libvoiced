@@ -27,7 +27,7 @@ import sys
 
 from clinepunk import clinepunk
 
-from libvoiced import __version__, direnv, putup
+from libvoiced import __version__, direnv, putup, venv
 
 __author__ = "Taylor Monacelli"
 __copyright__ = "Taylor Monacelli"
@@ -163,7 +163,9 @@ def main(args):
     if path:
         _logger.info(f"creating new project in {path.resolve()}")
         run_putup(path)
+        venv.create_virtualenv(path)
         direnv.setup(path)
+        # git.do_all(path)
         print(path)
 
     _logger.info("Script ends here")
