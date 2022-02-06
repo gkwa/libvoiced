@@ -35,5 +35,5 @@ def putup(project_path):
 
     logging.debug(errs.decode())
 
-    logging.debug(f"moving {tmp_dir} to {project_path}")
+    logging.debug(f"moving {tmp_dir.resolve()} to {project_path.resolve()}")
     shutil.move(tmp_dir, project_path)
