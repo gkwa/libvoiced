@@ -19,8 +19,28 @@ jobs:
       uses: docker/build-push-action@v3
       with:
         context: .
-        push: true
+        push: false
         platforms: linux/amd64
         tags: ${{ secrets.DOCKER_USERNAME }}/libvoiced:latest
         cache-from: type=registry,ref=${{ secrets.DOCKER_USERNAME }}/libvoiced:latest
         cache-to: type=inline
+  test:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+    - name: Login to dockerhub
+      uses: docker/login-action@v2
+      with:
+        registry: docker.io
+        username: ${{ secrets.DOCKER_USERNAME }}
+        password: ${{ secrets.DOCKER_PASSWORD }}
+    - name: Build
+      uses: docker/build-push-action@v3
+      with:
+        context: .
+        load: true
+        tags: ${{ secrets.DOCKER_USERNAME }}/libvoiced:latest
+    - name: Setup test
+      run: |
+        docker run --rm ${{ secrets.DOCKER_USERNAME }}/libvoiced:latest
