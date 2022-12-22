@@ -36,12 +36,6 @@ jobs:
         registry: docker.io
         username: ${{ secrets.DOCKER_USERNAME }}
         password: ${{ secrets.DOCKER_PASSWORD }}
-    - name: Build
-      uses: docker/build-push-action@v3
-      with:
-        context: .
-        load: true
-        tags: ${{ secrets.DOCKER_USERNAME }}/libvoiced:latest
     - name: Setup test
       run: |
         docker run --rm ${{ secrets.DOCKER_USERNAME }}/libvoiced:latest
