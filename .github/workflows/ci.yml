@@ -25,6 +25,7 @@ jobs:
         cache-from: type=registry,ref=${{ secrets.DOCKER_USERNAME }}/libvoiced:latest
         cache-to: type=inline
   test:
+    needs: buildx
     runs-on: ubuntu-latest
     steps:
     - name: Checkout
