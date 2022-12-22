@@ -1,3 +1,3 @@
 FROM python
 
-RUN pip install libvoiced
+RUN pip install libvoiced && libvoiced --version
